@@ -38,7 +38,7 @@ public class AuthenticatedUsersController {
         if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("ROLE_ADMIN")) {
             model.addAttribute("newUser", new User());
         }
-        return "mainPage";
+        return "/WEB-INF/mainPage.html";
     }
 
     @PostMapping("/save")
@@ -48,7 +48,7 @@ public class AuthenticatedUsersController {
         if (bindingResult.hasErrors()) {
             fillCommonsAttributes(model, authentication);
             model.addAttribute("error", "newUserError");
-            return "mainPage";
+            return "/WEB-INF/mainPage.html";
         } else {
             userService.saveUser(user);
             return "redirect:/";
@@ -65,7 +65,7 @@ public class AuthenticatedUsersController {
             model.addAttribute("errorMessages", bindingResult.getAllErrors());
             model.addAttribute("UnchangedUserId", user.getId());
             model.addAttribute("newUser", new User());
-            return "mainPage";
+            return "/WEB-INF/mainPage.html";
         } else {
 //            user.setPassword(password);
             userService.saveUser(user);

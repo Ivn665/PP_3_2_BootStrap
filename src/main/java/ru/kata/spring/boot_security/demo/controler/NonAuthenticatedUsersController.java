@@ -8,7 +8,7 @@ public class NonAuthenticatedUsersController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login";
+        return "/WEB-INF/login.html";
     }
 
 }
