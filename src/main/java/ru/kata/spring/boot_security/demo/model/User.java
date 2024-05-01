@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @Column(name = "Email", unique = true)
     private String email;
 
-    @Size(min = 5, max = 100, message = "Password should be between 5 and 100 characters")
+    @Size(min = 4, max = 100, message = "Password should be between 4 and 100 characters")
     @Column(name = "password")
     private String password;
 
