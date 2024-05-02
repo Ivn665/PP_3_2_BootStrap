@@ -14,7 +14,8 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
 
 
 @Controller
@@ -56,8 +57,8 @@ public class AuthenticatedUsersController {
     }
 
     @PostMapping("/edit")
-    public String updateUser(@ModelAttribute("user") @Valid User user//, @RequestParam String password
-            , BindingResult bindingResult, Model model, Authentication authentication) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
+                             Authentication authentication, HttpSession session) {
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             fillCommonsAttributes(model, authentication);
@@ -66,11 +67,12 @@ public class AuthenticatedUsersController {
             model.addAttribute("UnchangedUserId", user.getId());
             model.addAttribute("newUser", new User());
             return "/WEB-INF/mainPage.html";
-        } else {
-//            user.setPassword(password);
-            userService.saveUser(user);
-            return "redirect:/";
         }
+        if (!userService.getById(user.getId()).getUsername().equals(user.getUsername())) {
+            session.invalidate();
+        }
+        userService.saveUser(user);
+        return "redirect:/";
     }
 
 
@@ -93,7 +95,7 @@ public class AuthenticatedUsersController {
         }
     }
 
-    private  Collection<String> formatRoles(Authentication authentication) {
+    private Collection<String> formatRoles(Authentication authentication) {
         //Добавляем коллекцию ролей текущего пользователя без слова ROLE_
         Collection<String> roles = new HashSet<>();
         for (String r : AuthorityUtils.authorityListToSet(authentication.getAuthorities())) {

@@ -12,13 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class TestDataInt {
+public class TestDataInit {
 
     private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
-    public TestDataInt(UserService userService, RoleService roleService) {
+    public TestDataInit(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }

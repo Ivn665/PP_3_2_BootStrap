@@ -5,12 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -28,12 +27,6 @@ public class RoleServiceImpl implements RoleService{
     @Transactional
     public void saveRole(Role role) {
         roleRepository.save(role);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Role getRoleByName(Role.RoleType roleType){
-        return roleRepository.findRoleByName(roleType);
     }
 
 }
