@@ -36,53 +36,38 @@ public class AuthenticatedUsersController {
     @GetMapping("")
     public String showMainPage(Model model, Authentication authentication) {
         fillCommonsAttributes(model, authentication);
-        if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("ROLE_ADMIN")) {
-            model.addAttribute("newUser", new User());
-        }
         return "/WEB-INF/mainPage.html";
     }
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("newUser") @Valid User user
-            , BindingResult bindingResult, Model model, Authentication authentication) {
+            , BindingResult bindingResult) {
         userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-            fillCommonsAttributes(model, authentication);
-            model.addAttribute("error", "newUserError");
-            return "/WEB-INF/mainPage.html";
-        } else {
+        if (!bindingResult.hasErrors()) {
             userService.saveUser(user);
-            return "redirect:/";
         }
+        return "redirect:/";
     }
 
     @PostMapping("/edit")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
-                             Authentication authentication, HttpSession session) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpSession session) {
         userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-            fillCommonsAttributes(model, authentication);
-            model.addAttribute("error", "EditUserError");
-            model.addAttribute("errorMessages", bindingResult.getAllErrors());
-            model.addAttribute("UnchangedUserId", user.getId());
-            model.addAttribute("newUser", new User());
-            return "/WEB-INF/mainPage.html";
+        if (!bindingResult.hasErrors()) {
+            if (!userService.getById(user.getId()).getUsername().equals(user.getUsername())) {
+                session.invalidate();
+            }
+            userService.saveUser(user);
         }
-        if (!userService.getById(user.getId()).getUsername().equals(user.getUsername())) {
-            session.invalidate();
-        }
-        userService.saveUser(user);
         return "redirect:/";
     }
 
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Authentication authentication, HttpSession session) {
-        User userForDelete = userService.getById(id);
-        userService.deleteById(id);
-        if (authentication.getName().equals(userForDelete.getUsername())) {
+        if (authentication.getName().equals(userService.getById(id).getUsername())) {
             session.invalidate();
         }
+        userService.deleteById(id);
         return "redirect:/";
     }
 
@@ -92,6 +77,7 @@ public class AuthenticatedUsersController {
         if (roles.contains("ADMIN")) {
             model.addAttribute("usersList", userService.allUsers());
             model.addAttribute("roles", roleService.getAllRoles());
+            model.addAttribute("newUser", new User());
         }
     }
 

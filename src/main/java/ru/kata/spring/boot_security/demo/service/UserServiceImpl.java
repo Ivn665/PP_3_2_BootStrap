@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
         passwordEncoder = new BCryptPasswordEncoder();
     }
 
-
     @Transactional(readOnly = true)
     @Override
     public List<User> allUsers() {

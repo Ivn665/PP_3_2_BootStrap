@@ -43,43 +43,23 @@
                    href="#userPanel" role="tab" data-bs-toggle="pill">User</a>
             </li>
         </div>
-        <!--Notification of an error when saving changes-->
-        <div th:if="${error == 'EditUserError'}" aria-live="polite" aria-atomic="true" class="position-relative">
-            <div class="toast-container p-3 top-0 start-50 translate-middle-x" style="z-index: 9999;">
-                <div id="liveToast" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header justify-content-between">
-                        <strong class="me-auto text-warning" th:text="${'The user with id ' + UnchangedUserId + ' has not been changed'}">Warning</strong>
-                        <small></small>
-                        <button type="button" class="close" data-bs-dismiss="toast" aria-label="Close"><i class="bi bi-x"></i></button>
-                    </div>
-                    <div class="toast-body">
-                        <ul>
-                            <li th:each="message : ${errorMessages}" th:text="${message.getDefaultMessage()}"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+
     <div class="tab-content col-10">
         <!--Admin panel-->
         <div class="tab-pane fade show active bg-light" id="adminPanel" role="tabpanel" sec:authorize="hasRole('ROLE_ADMIN')">
             <h1>Admin panel</h1>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${error == 'newUserError' ? '' : 'active'}"
-                    href="#usersTable" role="tab" data-bs-toggle="tab">Users table</a>
+                    <a class="nav-link active" href="#usersTable" role="tab" data-bs-toggle="tab">Users table</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${error == 'newUserError' ? 'active' : ''}"
-                       href="#newUser" role="tab" data-bs-toggle="tab">New user</a>
+                    <a class="nav-link" href="#newUser" role="tab" data-bs-toggle="tab">New user</a>
                 </li>
             </ul>
             <div class="tab-content">
-
                 <!--All users-->
-                <div class="tab-pane fade" th:classappend="${error == 'newUserError' ? '' : 'show active'}"
-                     id="usersTable" role="tabpanel">
+                <div class="tab-pane fade show active" id="usersTable" role="tabpanel">
                     <div class="card">
                         <div class="card-header">
                             <h3>All users</h3>
@@ -125,8 +105,7 @@
                 </div>
 
                 <!--New user tab-->
-                <div class="tab-pane fade" th:classappend="${error == 'newUserError' ? 'show active' : ''}"
-                     id="newUser" role="tabpanel">
+                <div class="tab-pane fade" id="newUser" role="tabpanel">
                     <div class="card">
                         <div class="card-header">
                             <h3>Add new user</h3>
@@ -137,27 +116,22 @@
                                     <div class="mb-3">
                                         <label for="firstNameNewUser"><b>First name</b></label>
                                         <input class="form-control" type="text" th:field="*{firstName}" placeholder="First name" id="firstNameNewUser"/>
-                                        <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Error</div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="lastNameNewUser"><b>Last name</b></label>
                                         <input class="form-control" type="text" th:field="*{lastName}" placeholder="Last name" id="lastNameNewUser"/>
-                                        <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Error</div>
                                     </div>
                                     <div class="mb-3">
                                     <label for="ageNewUser"><b>Age</b></label>
                                     <input class="form-control" type="number" th:field="*{age}" placeholder="Age" id="ageNewUser"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Error</div>
                                     </div>
                                     <div class="mb-3">
                                     <label for="emailNewUser"><b>Email</b></label>
                                     <input class="form-control" type="email" th:field="*{email}" placeholder="Email" id="emailNewUser"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Error</div>
                                     </div>
                                     <div class="mb-3">
                                     <label for="passwordNewUser"><b>Password</b></label>
                                     <input class="form-control" type="password" th:field="*{password}" placeholder="Password" id="passwordNewUser"/>
-                                    <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error</div>
                                     </div>
                                     <div class="mb-3">
                                     <label for="rolesNewUser"><b>Role</b></label>
