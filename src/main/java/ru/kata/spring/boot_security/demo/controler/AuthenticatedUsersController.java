@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,13 +19,11 @@ public class AuthenticatedUsersController {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final UserValidator userValidator;
 
     @Autowired
-    public AuthenticatedUsersController(UserService userService, RoleService roleService, UserValidator userValidator) {
+    public AuthenticatedUsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.userValidator = userValidator;
     }
 
     @GetMapping("")
