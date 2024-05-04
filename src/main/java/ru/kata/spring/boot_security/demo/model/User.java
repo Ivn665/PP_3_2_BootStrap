@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,16 +9,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Data //создаёт геттеры, сеттеры и метод toString
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -25,24 +23,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Size(min = 2, max = 30, message = "First Name should be between 2 and 30 characters")
     private String firstName;
 
-    @Size(min = 2, max = 30, message = "Last Name should be between 2 and 30 characters")
     private String lastName;
 
-    @Min(value = 0, message = "Age should be equal or greater than 0")
-    @Max(value = 127, message = "Age should be equal or less than 127")
     private byte age;
 
-    @Email(message = "Invalid email address format")
-    @Column(unique = true)
     private String email;
 
-    @Size(min = 4, max = 100, message = "Password should be between 4 and 100 characters")
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
