@@ -11,6 +11,6 @@ public class MvcConfig implements WebMvcConfigurer {
     // @Controller handler method , rather want’s to map a URL directly to view template.
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/WEB-INF/login.html");
+        registry.addViewController("/").setViewName("WEB-INF/login.html");
     }
 }

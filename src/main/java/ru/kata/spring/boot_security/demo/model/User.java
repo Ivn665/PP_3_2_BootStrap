@@ -29,11 +29,12 @@ public class User implements UserDetails {
 
     private byte age;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),

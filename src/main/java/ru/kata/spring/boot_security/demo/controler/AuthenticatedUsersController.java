@@ -29,26 +29,28 @@ public class AuthenticatedUsersController {
     @GetMapping("")
     public String showMainPage(Model model, Authentication authentication) {
         fillCommonsAttributes(model, authentication);
-        return "/WEB-INF/mainPage.html";
+        return "WEB-INF/mainPage.html";
     }
 
-    @PostMapping("/save")
+    @PostMapping("save")
     public String saveUser(@ModelAttribute("newUser") User user) {
         userService.saveUser(user);
         return "redirect:/";
     }
 
-    @PostMapping("/edit")
-    public String updateUser(@ModelAttribute("user") User user, HttpSession session) {
-        if (!userService.getById(user.getId()).getUsername().equals(user.getUsername())) {
+    @PutMapping("edit")
+    public String updateUser(@ModelAttribute("user") User user, Authentication authentication, HttpSession session) {
+        User userFromDB = userService.getById(user.getId());
+        if (userFromDB.getUsername().equals(authentication.getName()) &&
+                userFromDB.getUsername().equals(user.getUsername())) { //проверка, изменился ли username
             session.invalidate();
         }
-        userService.saveUser(user);
+        userService.editUser(user);
         return "redirect:/";
     }
 
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Authentication authentication, HttpSession session) {
         if (authentication.getName().equals(userService.getById(id).getUsername())) {
             session.invalidate();
@@ -60,7 +62,7 @@ public class AuthenticatedUsersController {
     private void fillCommonsAttributes(Model model, Authentication authentication) {
         model.addAttribute("authenticatedUser", userService.getByEmail(authentication.getName()).get());
         if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("ROLE_ADMIN")) {
-            model.addAttribute("usersList", userService.allUsers());
+            model.addAttribute("usersList", userService.getAllUsers());
             model.addAttribute("roles", roleService.getAllRoles());
             model.addAttribute("newUser", new User());
         }

@@ -32,7 +32,7 @@ public class TestDataInit {
         roleService.saveRole(adminRole);
         roleService.saveRole(userRole);
 
-        if (userService.allUsers().isEmpty()) {
+        if (userService.getAllUsers().isEmpty()) {
 
             userService.saveUser(new User("Jackie", "Chan", (byte) 69
                     , "user@mail.ru", "user", new HashSet<>(Set.of(userRole))));

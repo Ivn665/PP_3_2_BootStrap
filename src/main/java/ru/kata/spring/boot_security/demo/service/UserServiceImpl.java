@@ -20,35 +20,31 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> allUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
     @Override
     public void saveUser(User user) {
-        Optional<User> existingUser = userRepository.findById(user.getId());
-        if (existingUser.isPresent()) {
-            editUser(user, existingUser);
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
+    @Override
     @Transactional
-    public void editUser(User changedUser, Optional<User> presentUser) {
-        if (!changedUser.getPassword().equals(presentUser.get().getPassword())) {
-            changedUser.setPassword(passwordEncoder.encode(changedUser.getPassword()));
+    public void editUser(User user) {
+        if (!user.getPassword().equals(userRepository.getById(user.getId()).getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(changedUser);
+        userRepository.save(user);
     }
 
     @Transactional
